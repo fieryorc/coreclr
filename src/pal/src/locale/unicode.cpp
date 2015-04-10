@@ -713,7 +713,6 @@ MultiByteToWideChar(
         retval = UTF8ToUnicode(lpMultiByteStr, cbMultiByte, lpWideCharStr, cchWideChar, dwFlags);
         goto EXIT;
     }
-
 #if !HAVE_COREFOUNDATION
     ERROR( "This code page is not in the system.\n" );
     SetLastError( ERROR_INVALID_PARAMETER );
