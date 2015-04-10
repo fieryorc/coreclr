@@ -1054,7 +1054,8 @@ MultiByteToWideChar(
             goto EXIT;
         }
 
-        if ( cbMultiByte > cchWideChar )
+        // Excluding null terminating character is valid case.
+        if ((cbMultiByte - 1) > cchWideChar)
         {
             ERROR( "The output buffer is too small\n" );
             SetLastError( ERROR_INSUFFICIENT_BUFFER );
@@ -1176,7 +1177,8 @@ MultiByteToWideChar(
             lpMultiByteStr+=bytes_processed;
         }
 
-        if (0 != cbMultiByte)
+        // Check if the target buffer is full. Target buffer doesn't need to hold null character.
+        if (cbMultiByte > 1)
         {
             ERROR("conversion failed : insufficient buffer\n");
             SetLastError(ERROR_INSUFFICIENT_BUFFER);
