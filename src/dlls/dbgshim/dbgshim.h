@@ -9,6 +9,8 @@
 
 #include <windows.h>
 
+extern "C"
+{
 HRESULT GetStartupNotificationEvent(DWORD debuggeePID,
                                     __out HANDLE* phStartupEvent);
 
@@ -33,4 +35,5 @@ HRESULT CreateDebuggingInterfaceFromVersionEx(
 HRESULT CreateDebuggingInterfaceFromVersion(
     LPCWSTR szDebuggeeVersion, 
     IUnknown ** ppCordb);
+}
 
