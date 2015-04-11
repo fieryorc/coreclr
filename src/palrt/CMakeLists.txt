@@ -22,3 +22,5 @@ add_library(palrt
     STATIC
     ${PALRT_SOURCES}
 )
+
+install(TARGETS palrt DESTINATION .)
