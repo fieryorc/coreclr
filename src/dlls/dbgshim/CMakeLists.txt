@@ -51,8 +51,9 @@ if(WIN32)
     )
 else()
     list(APPEND DBGSHIM_LIBRARIES
+        stdc++
         CoreClrPal
-        palrt
+        coreclr
     )
 endif(WIN32)
 
