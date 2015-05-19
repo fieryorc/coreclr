@@ -206,6 +206,7 @@ extern "C" {
 
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
 // includes are not included, so we need to define them.
+#ifndef PAL_STDCPP_COMPAT
 #ifndef PAL_IMPLEMENTATION
 typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;
@@ -216,6 +217,7 @@ typedef unsigned __int16 uint16_t;
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 #endif // PAL_IMPLEMENTATION
+#endif // PAL_STDCPP_COMPAT
 
 #ifndef _MSC_VER
 
@@ -560,6 +562,7 @@ typedef LONG_PTR SSIZE_T, *PSSIZE_T;
 #define SSIZE_T_MIN I64(-9223372036854775808)
 #endif
 
+#ifndef PAL_STDCPP_COMPAT
 #if defined(__APPLE_CC__) || defined(__LINUX__) 
 typedef unsigned long size_t;
 typedef long ptrdiff_t;
@@ -567,6 +570,7 @@ typedef long ptrdiff_t;
 typedef ULONG_PTR size_t;
 typedef LONG_PTR ptrdiff_t;
 #endif
+#endif // PAL_STDCPP_COMPAT
 #define _SIZE_T_DEFINED
 
 typedef LONG_PTR LPARAM;
@@ -578,18 +582,22 @@ typedef LONG_PTR LPARAM;
 #define _PTRDIFF_T
 #endif
 
+#ifndef PAL_STDCPP_COMPAT
 #if defined(__LINUX__) 
 typedef long int intptr_t;
 #else
 typedef INT_PTR intptr_t;
 #endif
+#endif // PAL_STDCPP_COMPAT
 #define _INTPTR_T_DEFINED
 
+#ifndef PAL_STDCPP_COMPAT
 #if defined(__LINUX__) 
 typedef unsigned long int uintptr_t;
 #else
 typedef UINT_PTR uintptr_t;
 #endif
+#endif // PAL_STDCPP_COMPAT
 #define _UINTPTR_T_DEFINED
 
 typedef DWORD LCID;
@@ -598,7 +606,7 @@ typedef WORD LANGID;
 
 typedef DWORD LCTYPE;
 
-typedef wchar_t WCHAR;
+typedef char16_t WCHAR;
 typedef WCHAR *PWCHAR;
 typedef WCHAR *LPWCH, *PWCH;
 typedef CONST WCHAR *LPCWCH, *PCWCH;

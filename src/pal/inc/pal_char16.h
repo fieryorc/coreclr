@@ -13,35 +13,35 @@ Module Name:
 
 Abstract:
 
-This file is used to define the wchar_t type as a 16-bit type on Unix.
+This file is used to define the WCHAR type as a 16-bit type on Unix.
 
 
 
 --*/
 
-// The unix compilers use a 32-bit wchar_t, so we must make a 16 bit wchar_t.
-// The windows compilers, gcc and MSVC, both define a 16 bit wchar_t.
+// The unix compilers use a 32-bit WCHAR, so we must make a 16 bit WCHAR.
+// The windows compilers, gcc and MSVC, both define a 16 bit WCHAR.
 
-// Note : wchar_t is a built-in type in C++, gcc/llvm ignores any attempts to
+// Note : WCHAR is a built-in type in C++, gcc/llvm ignores any attempts to
 // typedef it. Using the preprocessor here, we make sure gcc sees
-// __wchar_16_cpp__ instead of wchar_t. This is apparently not necessary under
-// vc++, for whom wchar_t is already a typedef instead of a built-in.
+// __wchar_16_cpp__ instead of WCHAR. This is apparently not necessary under
+// vc++, for whom WCHAR is already a typedef instead of a built-in.
 
 #if defined (PLATFORM_UNIX) && defined(__GNUC__)
-#undef wchar_t
-#define wchar_t __wchar_16_cpp__
+#undef WCHAR
+#define WCHAR __wchar_16_cpp__
 #endif // PLATFORM_UNIX
 
-// Set up the wchar_t type (which got preprocessed to __wchar_16_cpp__).
+// Set up the WCHAR type (which got preprocessed to __wchar_16_cpp__).
 // In C++11, the standard gives us char16_t, which is what we want (and matches types with u"")
 // In C, this doesn't exist, so use unsigned short.
 
 #if !defined(_WCHAR_T_DEFINED) || !defined(_MSC_VER)
 #if defined (PLATFORM_UNIX)
 #if defined(__cplusplus)
-typedef char16_t wchar_t;
+typedef char16_t WCHAR;
 #else
-typedef unsigned short wchar_t;
+typedef unsigned short WCHAR;
 #endif // __cplusplus
 #endif // PLATFORM_UNIX
 #ifndef _WCHAR_T_DEFINED

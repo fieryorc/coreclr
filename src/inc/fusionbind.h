@@ -29,7 +29,7 @@
 #include "fusionsetup.h"
 #include "sstring.h"
 #include "ex.h"
-#include "clr_std/type_traits"
+#include "type_traits"
 
 #include "binderngen.h"
 #include "clrprivbinding.h"

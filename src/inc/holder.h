@@ -13,8 +13,13 @@
 #include "staticcontract.h"
 #include "volatile.h"
 #include "palclr.h"
+#ifdef PAL_STDCPP_COMPAT
+#include <utility>
+#include <type_traits>
+#else // PAL_STDCPP_COMPAT
 #include "clr_std/utility"
 #include "clr_std/type_traits"
+#endif // PAL_STDCPP_COMPAT
 
 #if defined(FEATURE_COMINTEROP) && !defined(STRIKE)
 #include <Activation.h>

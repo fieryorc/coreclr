@@ -537,7 +537,11 @@
 
 #define DACCESS_TABLE_RESOURCE "COREXTERNALDATAACCESSRESOURCE"
 
+#ifdef PAL_STDCPP_COMPAT
+#include <type_traits>
+#else // PAL_STDCPP_COMPAT
 #include "clr_std/type_traits"
+#endif // PAL_STDCPP_COMPAT
 #include "crosscomp.h"
 
 // Information stored in the DAC table of interest to the DAC implementation
