@@ -288,7 +288,7 @@
 #undef __format_string
 #undef __format_string
 #undef __gdi_entry
-#undef __in
+//#undef __in
 #undef __in_awcount
 #undef __in_bcount
 #undef __in_bcount_nz
@@ -391,7 +391,7 @@
 #undef __null
 #undef __nullnullterminated
 #undef __nullterminated
-#undef __out
+//#undef __out
 #undef __out_awcount
 #undef __out_bcount
 #undef __out_bcount_full

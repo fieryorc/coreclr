@@ -5350,7 +5350,6 @@ typedef struct {
 } div_t;
 
 PALIMPORT div_t div(int numer, int denom);
-#endif // PAL_STDCPP_COMPAT
 
 PALIMPORT void * __cdecl memcpy(void *, const void *, size_t);
 PALIMPORT errno_t __cdecl memcpy_s(void *, size_t, const void *, size_t);
@@ -5381,13 +5380,10 @@ PALIMPORT int __cdecl vsprintf(char *, const char *, va_list);
 PALIMPORT int __cdecl _snprintf(char *, size_t, const char *, ...);
 PALIMPORT int __cdecl _vsnprintf(char *, size_t, const char *, va_list);
 PALIMPORT int __cdecl sscanf(const char *, const char *, ...);
-PALIMPORT char * __cdecl _strlwr(char *);
 PALIMPORT int __cdecl atoi(const char *);
 PALIMPORT LONG __cdecl atol(const char *);
 PALIMPORT ULONG __cdecl strtoul(const char *, char **, int);
 PALIMPORT double __cdecl atof(const char *);
-PALIMPORT char * __cdecl _gcvt_s(char *, int, double, int);
-PALIMPORT char * __cdecl _ecvt(double, int, int *, int *);
 PALIMPORT double __cdecl strtod(const char *, char **);
 PALIMPORT int __cdecl isprint(int);
 PALIMPORT int __cdecl isspace(int);
@@ -5397,10 +5393,15 @@ PALIMPORT int __cdecl isdigit(int);
 PALIMPORT int __cdecl isxdigit(int);
 PALIMPORT int __cdecl isupper(int);
 PALIMPORT int __cdecl islower(int);
-PALIMPORT int __cdecl __iscsym(int);
 PALIMPORT int __cdecl tolower(int);
 PALIMPORT int __cdecl toupper(int);
 
+#endif // PAL_STDCPP_COMPAT
+
+PALIMPORT char * __cdecl _strlwr(char *);
+PALIMPORT char * __cdecl _gcvt_s(char *, int, double, int);
+PALIMPORT char * __cdecl _ecvt(double, int, int *, int *);
+PALIMPORT int __cdecl __iscsym(int);
 PALIMPORT size_t __cdecl _mbslen(const unsigned char *);
 PALIMPORT unsigned char * __cdecl _mbsinc(const unsigned char *);
 PALIMPORT unsigned char * __cdecl _mbsninc(const unsigned char *, size_t);

@@ -2409,9 +2409,11 @@ extern "C" {
      in the negated form __notnull or the possibly null form __maybenull.
     */
 
+#ifndef PAL_STDCPP_COMPAT
     #define __null                  _Null_impl_
     #define __notnull               _Notnull_impl_
     #define __maybenull             _Maybenull_impl_
+#endif // PAL_STDCPP_COMPAT
 
     /*
      __readonly l
@@ -2600,8 +2602,10 @@ extern "C" {
 
 
 #else // ][
+#ifndef PAL_STDCPP_COMPAT
     #define __null
     #define __notnull
+#endif // PAL_STDCPP_COMPAT
     #define __maybenull
     #define __readonly
     #define __notreadonly
@@ -2652,7 +2656,7 @@ buffer, use the table in the buffer annotations section.
 
 #define __ecount(size)                                           _SAL1_Source_(__ecount, (size), __notnull __elem_writableTo(size))
 #define __bcount(size)                                           _SAL1_Source_(__bcount, (size), __notnull __byte_writableTo(size))
-#define __in                                                     _SAL1_Source_(__in, (), _In_)
+//#define __in                                                     _SAL1_Source_(__in, (), _In_)
 #define __in_ecount(size)                                        _SAL1_Source_(__in_ecount, (size), _In_reads_(size))
 #define __in_bcount(size)                                        _SAL1_Source_(__in_bcount, (size), _In_reads_bytes_(size))
 #define __in_z                                                   _SAL1_Source_(__in_z, (), _In_z_)
@@ -2661,7 +2665,7 @@ buffer, use the table in the buffer annotations section.
 #define __in_nz                                                  _SAL1_Source_(__in_nz, (), __in)
 #define __in_ecount_nz(size)                                     _SAL1_Source_(__in_ecount_nz, (size), __in_ecount(size))
 #define __in_bcount_nz(size)                                     _SAL1_Source_(__in_bcount_nz, (size), __in_bcount(size))
-#define __out                                                    _SAL1_Source_(__out, (), _Out_)
+//#define __out                                                    _SAL1_Source_(__out, (), _Out_)
 #define __out_ecount(size)                                       _SAL1_Source_(__out_ecount, (size), _Out_writes_(size))
 #define __out_bcount(size)                                       _SAL1_Source_(__out_bcount, (size), _Out_writes_bytes_(size))
 #define __out_ecount_part(size,length)                           _SAL1_Source_(__out_ecount_part, (size,length), _Out_writes_to_(size,length))

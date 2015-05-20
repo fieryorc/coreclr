@@ -582,22 +582,23 @@ typedef LONG_PTR LPARAM;
 #define _PTRDIFF_T
 #endif
 
-#ifndef PAL_STDCPP_COMPAT
+#ifdef PAL_STDCPP_COMPAT
+
+typedef unsigned long int uintptr_t;
+
+#else // PAL_STDCPP_COMPAT
+
 #if defined(__LINUX__) 
 typedef long int intptr_t;
-#else
-typedef INT_PTR intptr_t;
-#endif
-#endif // PAL_STDCPP_COMPAT
-#define _INTPTR_T_DEFINED
-
-#ifndef PAL_STDCPP_COMPAT
-#if defined(__LINUX__) 
 typedef unsigned long int uintptr_t;
 #else
+typedef INT_PTR intptr_t;
 typedef UINT_PTR uintptr_t;
 #endif
+
 #endif // PAL_STDCPP_COMPAT
+
+#define _INTPTR_T_DEFINED
 #define _UINTPTR_T_DEFINED
 
 typedef DWORD LCID;

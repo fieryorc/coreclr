@@ -948,7 +948,7 @@ inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
         if(buf == nullptr)
             return 0;
 
-        int ret = _vsnprintf(buf, guess, _Format, _ArgList);
+        int ret = PAL__vsnprintf(buf, guess, _Format, _ArgList);
         free(buf);
 
         if ((ret != -1) && (ret < guess))
@@ -1003,7 +1003,7 @@ inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _C
 inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords - 1;
-    int ret = _vsnprintf(_Dst, _Count, _Format, _ArgList);
+    int ret = PAL__vsnprintf(_Dst, _Count, _Format, _ArgList);
     _Dst[_SizeInWords - 1] = L'\0';
     if (ret < 0 && errno == 0)
     {
@@ -1017,7 +1017,7 @@ inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Cou
     int ret;
     va_list _ArgList;
     va_start(_ArgList, _Format);
-    ret = _vsnprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
+    ret = PAL__vsnprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
     va_end(_ArgList);
     return ret;
 }
