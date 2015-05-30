@@ -220,16 +220,17 @@ Function:
 
 See MSDN doc.
 --*/
-void InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags)
+BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags)
 {
     PERF_ENTRY(InitializeCriticalSection);
     ENTRY("InitializeCriticalSectionEx(lpCriticalSection=%p, dwSpinCount=%d, Flags=%d)\n",
           lpCriticalSection, dwSpinCount, Flags);
 
-    InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
+    BOOL bRet = InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
 
     LOGEXIT("InitializeCriticalSectionEx returns void\n");
     PERF_EXIT(InitializeCriticalSection);
+    return bRet;
 }
 
 /*++

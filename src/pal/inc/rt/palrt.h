@@ -342,6 +342,7 @@ typedef GUID CLSID;
 #endif
 #define CLSID_NULL GUID_NULL
 #define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
+typedef CLSID *LPCLSID;
 
 typedef UINT_PTR WPARAM;
 typedef LONG_PTR LRESULT;
@@ -358,7 +359,11 @@ typedef union _ULARGE_INTEGER {
         DWORD LowPart;
         DWORD HighPart;
 #endif
-    } u;
+    } 
+#ifndef PAL_STDCPP_COMPAT
+    u
+#endif // PAL_STDCPP_COMPAT
+     ;
     ULONGLONG QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
@@ -562,6 +567,20 @@ enum VARENUM {
 
 typedef struct tagVARIANT VARIANT, *LPVARIANT;
 
+#if !defined(_FORCENAMELESSUNION)
+#define __VARIANT_NAME_1 n1
+#define __VARIANT_NAME_2 n2
+#define __VARIANT_NAME_3 n3
+#define __VARIANT_NAME_4 brecVal
+#else
+#define __tagVARIANT
+#define __VARIANT_NAME_1
+#define __VARIANT_NAME_2
+#define __VARIANT_NAME_3
+#define __tagBRECORD
+#define __VARIANT_NAME_4
+#endif
+
 struct tagVARIANT
     {
     union
@@ -624,11 +643,11 @@ struct tagVARIANT
                     {
                     PVOID pvRecord;
                     interface IRecordInfo *pRecInfo;
-                    } brecVal;
-                } n3;
-            } n2;
+                    } __VARIANT_NAME_4;
+                } __VARIANT_NAME_3;
+            } __VARIANT_NAME_2;
         DECIMAL decVal;
-        } n1;
+        } __VARIANT_NAME_1;
     };
 
 typedef VARIANT VARIANTARG, *LPVARIANTARG;
@@ -809,6 +828,16 @@ enum tagMIMECONTF {
 /******************* shlwapi ************************************/
 
 // note: diff in NULL handing and calling convetion
+#ifdef PAL_STDCPP_COMPAT
+#define StrCpyW                 PAL_wcscpy
+#define StrCpyNW                PAL_lstrcpynW // note: can't be wcsncpy!
+#define StrCatW                 PAL_wcscat
+#define StrChrW                 (WCHAR*)PAL_wcschr
+#define StrCmpW                 PAL_wcscmp
+#define StrCmpIW                PAL__wcsicmp
+#define StrCmpNW                PAL_wcsncmp
+#define StrCmpNIW               PAL__wcsnicmp
+#else // PAL_STDCPP_COMPAT
 #define StrCpyW                 wcscpy
 #define StrCpyNW                lstrcpynW // note: can't be wcsncpy!
 #define StrCatW                 wcscat
@@ -817,6 +846,7 @@ enum tagMIMECONTF {
 #define StrCmpIW                _wcsicmp
 #define StrCmpNW                wcsncmp
 #define StrCmpNIW               _wcsnicmp
+#endif // PAL_STDCPP_COMPAT
 
 STDAPI_(LPWSTR) StrNCatW(LPWSTR lpFront, LPCWSTR lpBack, int cchMax);
 STDAPI_(int) StrToIntW(LPCWSTR lpSrc);
@@ -824,9 +854,9 @@ STDAPI_(LPWSTR) StrStrIW(LPCWSTR lpFirst, LPCWSTR lpSrch);
 STDAPI_(LPWSTR) StrRChrW(LPCWSTR lpStart, LPCWSTR lpEnd, WCHAR wMatch);
 STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize);
 
-#define lstrcmpW                wcscmp
-#define lstrcmpiW               _wcsicmp
-#define wnsprintfW              _snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
+#define lstrcmpW                PAL_wcscmp
+#define lstrcmpiW               PAL__wcsicmp
+#define wnsprintfW              PAL__snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 #define wvnsprintfW             PAL__vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
 #ifdef UNICODE
@@ -892,7 +922,10 @@ Remember to fix the errcode defintion in safecrt.h.
 #define sprintf_s _snprintf
 #define swprintf_s _snwprintf
 #define vsprintf_s _vsnprintf
+
+#ifndef PAL_STDCPP_COMPAT
 #define vswprintf_s PAL_vsnwprintf
+#endif // PAL_STDCPP_COMPAT
 
 extern "C++" {
 
@@ -1017,7 +1050,7 @@ inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Cou
     int ret;
     va_list _ArgList;
     va_start(_ArgList, _Format);
-    ret = PAL__vsnprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
+    ret = _vsnprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
     va_end(_ArgList);
     return ret;
 }
@@ -1719,8 +1752,10 @@ typedef struct tagVS_FIXEDFILEINFO
 /******************** external includes *************************/
 
 #include "ntimage.h"
-#include "ccombstr.h"
-#include "cstring.h"
+#ifndef PAL_STDCPP_COMPAT
+#include "cpp/ccombstr.h"
+#include "cpp/cstring.h"
+#endif // PAL_STDCPP_COMPAT
 #include "sscli_version.h"
 
 #endif // RC_INVOKED

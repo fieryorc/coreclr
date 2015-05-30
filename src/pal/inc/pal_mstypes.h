@@ -192,6 +192,7 @@ extern "C" {
 // they must be either signed or unsigned) and we want to be able to use 
 // __int64 as though it were intrinsic
 
+#ifndef PAL_STDCPP_COMPAT
 #ifdef BIT64
 #define __int64     long
 #else // _WIN64
@@ -226,6 +227,7 @@ typedef long double LONG_DOUBLE;
 #endif
 
 #endif // _MSC_VER
+#endif // PAL_STDCPP_COMPAT
 
 typedef void VOID;
 

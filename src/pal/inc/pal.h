@@ -384,12 +384,15 @@ typedef long time_t;
 #define SUBLANG_NEUTRAL                  0x00    // language neutral
 #define SUBLANG_DEFAULT                  0x01    // user default
 #define SORT_DEFAULT                     0x0     // sorting default
+#define SUBLANG_SYS_DEFAULT              0x02    // system default
 
 #define MAKELANGID(p, s)       ((((WORD  )(s)) << 10) | (WORD  )(p))
 #define PRIMARYLANGID(lgid)    ((WORD  )(lgid) & 0x3ff)
 #define SUBLANGID(lgid)        ((WORD  )(lgid) >> 10)
 
+#define LANG_SYSTEM_DEFAULT    (MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT))
 #define LANG_USER_DEFAULT      (MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT))
+#define LOCALE_SYSTEM_DEFAULT  (MAKELCID(LANG_SYSTEM_DEFAULT, SORT_DEFAULT))
 #define LOCALE_USER_DEFAULT    (MAKELCID(LANG_USER_DEFAULT, SORT_DEFAULT))
 #define LOCALE_NEUTRAL         (MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), SORT_DEFAULT))
 #define LOCALE_US_ENGLISH      (MAKELCID(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT))
@@ -3098,7 +3101,7 @@ typedef struct _CRITICAL_SECTION {
 PALIMPORT VOID PALAPI EnterCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 PALIMPORT VOID PALAPI LeaveCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 PALIMPORT VOID PALAPI InitializeCriticalSection(OUT LPCRITICAL_SECTION lpCriticalSection);
-PALIMPORT VOID PALAPI InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
+PALIMPORT BOOL PALAPI InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
 PALIMPORT VOID PALAPI DeleteCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 PALIMPORT BOOL PALAPI TryEnterCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 
@@ -5221,7 +5224,7 @@ ReportEventW (
 
 /******************* C Runtime Entrypoints *******************************/
 
-#ifdef PLATFORM_UNIX && !PAL_STDCPP_COMPAT
+#if defined(PLATFORM_UNIX) && !defined(PAL_STDCPP_COMPAT)
 /* Some C runtime functions needs to be reimplemented by the PAL.
    To avoid name collisions, those functions have been renamed using
    defines */
@@ -5343,7 +5346,11 @@ ReportEventW (
 
 typedef int errno_t;
 
-#ifndef PAL_STDCPP_COMPAT
+#ifdef PAL_STDCPP_COMPAT
+PALIMPORT int __cdecl PAL__vsnprintf(char *, size_t, const char *, va_list);
+PALIMPORT errno_t __cdecl memcpy_s(void *, size_t, const void *, size_t);
+PALIMPORT errno_t __cdecl memmove_s(void *, size_t, const void *, size_t);
+#else // PAL_STDCPP_COMPAT
 typedef struct {
     int quot;
     int rem;
@@ -5509,7 +5516,9 @@ PALIMPORT unsigned int __cdecl _rotl(unsigned int, int);
 PALIMPORT unsigned int __cdecl _rotr(unsigned int, int);
 PALIMPORT int __cdecl abs(int);
 PALIMPORT double __cdecl fabs(double); 
+#ifndef PAL_STDCPP_COMPAT
 PALIMPORT LONG __cdecl labs(LONG);
+#endif // PAL_STDCPP_COMPAT
 // clang complains if this is declared with __int64
 PALIMPORT long long __cdecl llabs(long long);
 
