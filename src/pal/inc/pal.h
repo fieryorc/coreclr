@@ -5347,6 +5347,8 @@ ReportEventW (
 typedef int errno_t;
 
 #ifdef PAL_STDCPP_COMPAT
+#include <string.h>
+
 PALIMPORT int __cdecl PAL__vsnprintf(char *, size_t, const char *, va_list);
 PALIMPORT errno_t __cdecl memcpy_s(void *, size_t, const void *, size_t);
 PALIMPORT errno_t __cdecl memmove_s(void *, size_t, const void *, size_t);
@@ -5496,13 +5498,13 @@ PALIMPORT WCHAR __cdecl towupper(WCHAR);
 
 #ifdef __cplusplus
 extern "C++" {
-inline WCHAR *wcschr(WCHAR *_S, WCHAR _C)
+inline WCHAR *PAL_wcschr(WCHAR *_S, WCHAR _C)
         {return ((WCHAR *)PAL_wcschr((const WCHAR *)_S, _C)); }
-inline WCHAR *wcsrchr(WCHAR *_S, WCHAR _C)
+inline WCHAR *PAL_wcsrchr(WCHAR *_S, WCHAR _C)
         {return ((WCHAR *)PAL_wcsrchr((const WCHAR *)_S, _C)); }
-inline WCHAR *wcspbrk(WCHAR *_S, const WCHAR *_P)
+inline WCHAR *PAL_wcspbrk(WCHAR *_S, const WCHAR *_P)
         {return ((WCHAR *)PAL_wcspbrk((const WCHAR *)_S, _P)); }
-inline WCHAR *wcsstr(WCHAR *_S, const WCHAR *_P)
+inline WCHAR *PAL_wcsstr(WCHAR *_S, const WCHAR *_P)
         {return ((WCHAR *)PAL_wcsstr((const WCHAR *)_S, _P)); }
 }
 #endif
@@ -5585,8 +5587,10 @@ PALIMPORT char * __cdecl _strdup(const char *);
 #define alloca  __builtin_alloca
 #endif // __GNUC__
 
+#ifndef PAL_STDCPP_COMPAT
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif // PAL_STDCPP_COMPAT
 
 PALIMPORT PAL_NORETURN void __cdecl exit(int);
 int __cdecl atexit(void (__cdecl *function)(void));
@@ -5739,10 +5743,17 @@ PALIMPORT PAL_FILE * __cdecl PAL_get_stdin(int caller);
 PALIMPORT PAL_FILE * __cdecl PAL_get_stderr(int caller);
 PALIMPORT int * __cdecl PAL_errno(int caller);
 
+#ifdef PAL_STDCPP_COMPAT
+#define PAL_stdout (PAL_get_stdout(PAL_get_caller))
+#define PAL_stdin  (PAL_get_stdin(PAL_get_caller))
+#define PAL_stderr (PAL_get_stderr(PAL_get_caller))
+#define PAL_errno   (*PAL_errno(PAL_get_caller))
+#else // PAL_STDCPP_COMPAT
 #define stdout (PAL_get_stdout(PAL_get_caller))
 #define stdin  (PAL_get_stdin(PAL_get_caller))
 #define stderr (PAL_get_stderr(PAL_get_caller))
 #define errno   (*PAL_errno(PAL_get_caller))
+#endif // PAL_STDCPP_COMPAT
 
 PALIMPORT char * __cdecl getenv(const char *);
 PALIMPORT int __cdecl _putenv(const char *);

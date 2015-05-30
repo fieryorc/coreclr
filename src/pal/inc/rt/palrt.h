@@ -310,12 +310,15 @@ typedef const GUID FAR *LPCGUID;
 
 #ifdef __cplusplus
 extern "C++" {
+#if !defined _SYS_GUID_OPERATOR_EQ_ && !defined _NO_SYS_GUID_OPERATOR_EQ_
+#define _SYS_GUID_OPERATOR_EQ_
 inline int IsEqualGUID(REFGUID rguid1, REFGUID rguid2)
     { return !memcmp(&rguid1, &rguid2, sizeof(GUID)); }
 inline int operator==(REFGUID guidOne, REFGUID guidOther)
     { return IsEqualGUID(guidOne,guidOther); }
 inline int operator!=(REFGUID guidOne, REFGUID guidOther)
     { return !IsEqualGUID(guidOne,guidOther); }
+#endif
 };
 #endif // __cplusplus
 
@@ -548,6 +551,8 @@ enum VARENUM {
     VT_LPSTR    = 30,
     VT_LPWSTR   = 31,
     VT_RECORD   = 36,
+    VT_INT_PTR	= 37,
+    VT_UINT_PTR	= 38,  
 
     VT_FILETIME        = 64,
     VT_BLOB            = 65,
@@ -566,6 +571,7 @@ enum VARENUM {
 };
 
 typedef struct tagVARIANT VARIANT, *LPVARIANT;
+typedef struct tagSAFEARRAY SAFEARRAY;
 
 #if !defined(_FORCENAMELESSUNION)
 #define __VARIANT_NAME_1 n1
@@ -612,6 +618,8 @@ struct tagVARIANT
                 DATE date;
                 BSTR bstrVal;
                 interface IUnknown *punkVal;
+                interface IDispatch *pdispVal;
+                SAFEARRAY *parray;
                 BYTE *pbVal;
                 SHORT *piVal;
                 LONG *plVal;
@@ -684,6 +692,7 @@ STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
 #define V_INTREF(X)      V_UNION(X, pintVal)
 #define V_UINT(X)        V_UNION(X, uintVal)
 #define V_UINTREF(X)     V_UNION(X, puintVal)
+#define V_ARRAY(X)       V_UNION(X, parray)
 
 #ifdef _WIN64
 #define V_INT_PTR(X)        V_UNION(X, llVal)
@@ -1178,7 +1187,6 @@ errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, 
 STDAPI_(BOOL) PathAppendW(LPWSTR pszPath, LPCWSTR pszMore);
 STDAPI_(int) PathCommonPrefixW(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR  pszPath);
 PALIMPORT LPWSTR PALAPI PathFindFileNameW(LPCWSTR pPath);
-STDAPI_(LPWSTR) PathFindExtensionW(LPCWSTR pszPath);
 STDAPI_(int) PathGetDriveNumberW(LPCWSTR lpsz);
 STDAPI_(BOOL) PathIsRelativeW(LPCWSTR lpszPath);
 STDAPI_(BOOL) PathIsUNCW(LPCWSTR pszPath);

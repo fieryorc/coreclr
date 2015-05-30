@@ -2431,6 +2431,7 @@ unsigned char * __cdecl _mbstok_s(unsigned char *_String, const unsigned char *_
 
 #endif /* _SAFECRT_DEFINE_MBS_FUNCTIONS */
 
+#ifndef PAL_STDCPP_COMPAT
 /* strnlen */
 /*
  * strnlen, wcsnlen ;
@@ -2480,6 +2481,7 @@ size_t __cdecl wcsnlen(const WCHAR *inString, size_t inMaxSize)
 }
 
 #endif
+#endif // PAL_STDCPP_COMPAT
 
 /* _makepath_s */
 /* 
