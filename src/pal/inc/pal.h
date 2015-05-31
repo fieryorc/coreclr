@@ -5313,9 +5313,6 @@ ReportEventW (
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
 #define unlink        PAL_unlink
-/* Note the TWO underscores. */
-#define _vsnprintf    PAL__vsnprintf
-#define _vsnwprintf   PAL__wvsnprintf
 #define _strdup       PAL__strdup
 #define _getcwd       PAL__getcwd
 #define _open         PAL__open
@@ -5328,6 +5325,12 @@ ReportEventW (
 #define _mm_setcsr    PAL__mm_setcsr
 #endif // _AMD64_
 
+#endif /* PLATFORM_UNIX */
+
+#ifdef PLATFORM_UNIX
+   /* Note the TWO underscores. */
+#define _vsnprintf    PAL__vsnprintf
+#define _vsnwprintf   PAL__wvsnprintf
 #endif /* PLATFORM_UNIX */
 
 #ifndef _CONST_RETURN
@@ -5415,13 +5418,15 @@ PALIMPORT size_t __cdecl _mbslen(const unsigned char *);
 PALIMPORT unsigned char * __cdecl _mbsinc(const unsigned char *);
 PALIMPORT unsigned char * __cdecl _mbsninc(const unsigned char *, size_t);
 PALIMPORT unsigned char * __cdecl _mbsdec(const unsigned char *, const unsigned char *);
+PALIMPORT int __cdecl _wcsicmp(const WCHAR *, const WCHAR*);
+PALIMPORT int __cdecl _wcsnicmp(const WCHAR *, const WCHAR *, size_t);
+PALIMPORT int __cdecl _vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
+PALIMPORT WCHAR * __cdecl _itow(int, WCHAR *, int);
 
 #ifdef PAL_STDCPP_COMPAT
 PALIMPORT size_t __cdecl PAL_wcslen(const WCHAR *);
 PALIMPORT int __cdecl PAL_wcscmp(const WCHAR*, const WCHAR*);
 PALIMPORT int __cdecl PAL_wcsncmp(const WCHAR *, const WCHAR *, size_t);
-PALIMPORT int __cdecl PAL__wcsicmp(const WCHAR *, const WCHAR*);
-PALIMPORT int __cdecl PAL__wcsnicmp(const WCHAR *, const WCHAR *, size_t);
 PALIMPORT WCHAR * __cdecl PAL_wcscat(WCHAR *, const WCHAR *);
 PALIMPORT WCHAR * __cdecl PAL_wcsncat(WCHAR *, const WCHAR *, size_t);
 PALIMPORT WCHAR * __cdecl PAL_wcscpy(WCHAR *, const WCHAR *);
@@ -5435,13 +5440,11 @@ PALIMPORT size_t __cdecl PAL_wcscspn(const WCHAR *, const WCHAR *);
 PALIMPORT int __cdecl PAL_swprintf(WCHAR *, const WCHAR *, ...);
 PALIMPORT int __cdecl PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
 PALIMPORT int __cdecl PAL__snwprintf(WCHAR *, size_t, const WCHAR *, ...);
-PALIMPORT int __cdecl PAL__vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
 PALIMPORT int __cdecl PAL_swscanf(const WCHAR *, const WCHAR *, ...);
 PALIMPORT WCHAR * __cdecl PAL__wcslwr(WCHAR *);
 PALIMPORT LONG __cdecl PAL_wcstol(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONG __cdecl PAL_wcstoul(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-PALIMPORT WCHAR * __cdecl PAL__itow(int, WCHAR *, int);
 PALIMPORT WCHAR * __cdecl PAL__i64tow(__int64, WCHAR *, int);
 PALIMPORT WCHAR * __cdecl PAL__ui64tow(unsigned __int64, WCHAR *, int);
 PALIMPORT int __cdecl PAL__wtoi(const WCHAR *);
@@ -5459,8 +5462,6 @@ PALIMPORT WCHAR __cdecl PAL_towupper(WCHAR);
 PALIMPORT size_t __cdecl wcslen(const WCHAR *);
 PALIMPORT int __cdecl wcscmp(const WCHAR*, const WCHAR*);
 PALIMPORT int __cdecl wcsncmp(const WCHAR *, const WCHAR *, size_t);
-PALIMPORT int __cdecl _wcsicmp(const WCHAR *, const WCHAR*);
-PALIMPORT int __cdecl _wcsnicmp(const WCHAR *, const WCHAR *, size_t);
 PALIMPORT WCHAR * __cdecl wcscat(WCHAR *, const WCHAR *);
 PALIMPORT WCHAR * __cdecl wcsncat(WCHAR *, const WCHAR *, size_t);
 PALIMPORT WCHAR * __cdecl wcscpy(WCHAR *, const WCHAR *);
@@ -5474,13 +5475,11 @@ PALIMPORT size_t __cdecl wcscspn(const WCHAR *, const WCHAR *);
 PALIMPORT int __cdecl swprintf(WCHAR *, const WCHAR *, ...);
 PALIMPORT int __cdecl vswprintf(WCHAR *, const WCHAR *, va_list);
 PALIMPORT int __cdecl _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
-PALIMPORT int __cdecl _vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
 PALIMPORT int __cdecl swscanf(const WCHAR *, const WCHAR *, ...);
 PALIMPORT WCHAR * __cdecl _wcslwr(WCHAR *);
 PALIMPORT LONG __cdecl wcstol(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONG __cdecl wcstoul(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-PALIMPORT WCHAR * __cdecl _itow(int, WCHAR *, int);
 PALIMPORT WCHAR * __cdecl _i64tow(__int64, WCHAR *, int);
 PALIMPORT WCHAR * __cdecl _ui64tow(unsigned __int64, WCHAR *, int);
 PALIMPORT int __cdecl _wtoi(const WCHAR *);

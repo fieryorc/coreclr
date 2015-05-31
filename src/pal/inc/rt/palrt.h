@@ -864,9 +864,9 @@ STDAPI_(LPWSTR) StrRChrW(LPCWSTR lpStart, LPCWSTR lpEnd, WCHAR wMatch);
 STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize);
 
 #define lstrcmpW                PAL_wcscmp
-#define lstrcmpiW               PAL__wcsicmp
+#define lstrcmpiW               _wcsicmp
 #define wnsprintfW              PAL__snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
-#define wvnsprintfW             PAL__vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
+#define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
 #ifdef UNICODE
 #define StrCpy                  StrCpyW
@@ -932,9 +932,7 @@ Remember to fix the errcode defintion in safecrt.h.
 #define swprintf_s _snwprintf
 #define vsprintf_s _vsnprintf
 
-#ifndef PAL_STDCPP_COMPAT
-#define vswprintf_s PAL_vsnwprintf
-#endif // PAL_STDCPP_COMPAT
+#define vswprintf_s _vsnwprintf
 
 extern "C++" {
 
@@ -1010,7 +1008,7 @@ inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
         if(buf == nullptr)
             return 0;
 
-        int ret = PAL__vsnwprintf(buf, guess, _Format, _ArgList);
+        int ret = _vsnwprintf(buf, guess, _Format, _ArgList);
         free(buf);
 
         if ((ret != -1) && (ret < guess))
@@ -1023,7 +1021,7 @@ inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
 inline int __cdecl _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords - 1;
-    int ret = PAL__vsnwprintf(_Dst, _Count, _Format, _ArgList);
+    int ret = _vsnwprintf(_Dst, _Count, _Format, _ArgList);
     _Dst[_SizeInWords - 1] = L'\0';
     if (ret < 0 && errno == 0)
     {
@@ -1108,7 +1106,7 @@ errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
 
     /* TODO: do not write past buffer size */
-    PAL__itow(_Value, _Dst, _Radix);
+    _itow(_Value, _Dst, _Radix);
     return 0;
 }
 
