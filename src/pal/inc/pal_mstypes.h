@@ -207,7 +207,6 @@ extern "C" {
 
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
 // includes are not included, so we need to define them.
-#ifndef PAL_STDCPP_COMPAT
 #ifndef PAL_IMPLEMENTATION
 typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;
@@ -218,7 +217,6 @@ typedef unsigned __int16 uint16_t;
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 #endif // PAL_IMPLEMENTATION
-#endif // PAL_STDCPP_COMPAT
 
 #ifndef _MSC_VER
 
@@ -227,7 +225,7 @@ typedef long double LONG_DOUBLE;
 #endif
 
 #endif // _MSC_VER
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 
 typedef void VOID;
 
@@ -587,9 +585,11 @@ typedef LONG_PTR LPARAM;
 #ifdef PAL_STDCPP_COMPAT
 
 typedef unsigned long int uintptr_t;
+typedef char16_t WCHAR;
 
 #else // PAL_STDCPP_COMPAT
 
+typedef wchar_t WCHAR;
 #if defined(__LINUX__) 
 typedef long int intptr_t;
 typedef unsigned long int uintptr_t;
@@ -609,7 +609,6 @@ typedef WORD LANGID;
 
 typedef DWORD LCTYPE;
 
-typedef char16_t WCHAR;
 typedef WCHAR *PWCHAR;
 typedef WCHAR *LPWCH, *PWCH;
 typedef CONST WCHAR *LPCWCH, *PCWCH;

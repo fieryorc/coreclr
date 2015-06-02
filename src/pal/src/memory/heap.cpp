@@ -120,7 +120,8 @@ HeapCreate(
 {
 #ifndef __APPLE__
     return (HANDLE)DUMMY_HEAP;
-#else    HANDLE ret = INVALID_HANDLE_VALUE;
+#else
+    HANDLE ret = INVALID_HANDLE_VALUE;
 
     PERF_ENTRY(HeapCreate);
     ENTRY("HeapCreate(flOptions=%#x, dwInitialSize=%u, dwMaximumSize=%u)\n",

@@ -226,11 +226,11 @@ BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwS
     ENTRY("InitializeCriticalSectionEx(lpCriticalSection=%p, dwSpinCount=%d, Flags=%d)\n",
           lpCriticalSection, dwSpinCount, Flags);
 
-    BOOL bRet = InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
+    InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
 
     LOGEXIT("InitializeCriticalSectionEx returns void\n");
     PERF_EXIT(InitializeCriticalSection);
-    return bRet;
+    return true;
 }
 
 /*++

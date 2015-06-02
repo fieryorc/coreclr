@@ -843,9 +843,9 @@ enum tagMIMECONTF {
 #define StrCatW                 PAL_wcscat
 #define StrChrW                 (WCHAR*)PAL_wcschr
 #define StrCmpW                 PAL_wcscmp
-#define StrCmpIW                PAL__wcsicmp
+#define StrCmpIW                _wcsicmp
 #define StrCmpNW                PAL_wcsncmp
-#define StrCmpNIW               PAL__wcsnicmp
+#define StrCmpNIW               _wcsnicmp
 #else // PAL_STDCPP_COMPAT
 #define StrCpyW                 wcscpy
 #define StrCpyNW                lstrcpynW // note: can't be wcsncpy!
@@ -865,7 +865,7 @@ STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize)
 
 #define lstrcmpW                PAL_wcscmp
 #define lstrcmpiW               _wcsicmp
-#define wnsprintfW              PAL__snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
+#define wnsprintfW              _snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 #define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
 #ifdef UNICODE
@@ -953,7 +953,7 @@ inline errno_t __cdecl _wcslwr_unsafe(WCHAR *str, size_t sz)
         return 1;
     }
 
-    PAL__wcslwr(copy);
+    _wcslwr(copy);
     wcscpy_s(str, sz, copy);
     free(copy);
 	
@@ -988,7 +988,7 @@ inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
         if(buf == nullptr)
             return 0;
 
-        int ret = PAL__vsnprintf(buf, guess, _Format, _ArgList);
+        int ret = _vsnprintf(buf, guess, _Format, _ArgList);
         free(buf);
 
         if ((ret != -1) && (ret < guess))
@@ -1046,7 +1046,7 @@ inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _C
 inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords - 1;
-    int ret = PAL__vsnprintf(_Dst, _Count, _Format, _ArgList);
+    int ret = _vsnprintf(_Dst, _Count, _Format, _ArgList);
     _Dst[_SizeInWords - 1] = L'\0';
     if (ret < 0 && errno == 0)
     {
@@ -1067,7 +1067,7 @@ inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Cou
 
 inline errno_t __cdecl _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
 {
-    PAL_FILE *result = PAL__wfopen(fileName, mode);
+    PAL_FILE *result = _wfopen(fileName, mode);
     if(result == 0) {
         return 1;
     } else {
@@ -1137,7 +1137,7 @@ errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int 
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
 
     /* TODO: do not write past buffer size */
-    PAL__i64tow(_Value, _Dst, _Radix);
+    _i64tow(_Value, _Dst, _Radix);
     return 0;
 }
 

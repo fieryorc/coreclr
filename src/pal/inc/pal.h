@@ -5434,7 +5434,7 @@ PALIMPORT int __cdecl _wcsnicmp(const WCHAR *, const WCHAR *, size_t);
 PALIMPORT int __cdecl _vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
 PALIMPORT WCHAR * __cdecl _itow(int, WCHAR *, int);
 
-#ifdef PAL_STDCPP_COMPAT
+//#ifdef PAL_STDCPP_COMPAT
 PALIMPORT size_t __cdecl PAL_wcslen(const WCHAR *);
 PALIMPORT int __cdecl PAL_wcscmp(const WCHAR*, const WCHAR*);
 PALIMPORT int __cdecl PAL_wcsncmp(const WCHAR *, const WCHAR *, size_t);
@@ -5449,16 +5449,16 @@ PALIMPORT WCHAR _WConst_return * __cdecl PAL_wcsstr(const WCHAR *, const WCHAR *
 PALIMPORT WCHAR * __cdecl PAL_wcstok(WCHAR *, const WCHAR *);
 PALIMPORT size_t __cdecl PAL_wcscspn(const WCHAR *, const WCHAR *);
 PALIMPORT int __cdecl PAL_swprintf(WCHAR *, const WCHAR *, ...);
-PALIMPORT int __cdecl PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
-PALIMPORT int __cdecl PAL__snwprintf(WCHAR *, size_t, const WCHAR *, ...);
+PALIMPORT int __cdecl vswprintf(WCHAR *, const WCHAR *, va_list);
+PALIMPORT int __cdecl _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
 PALIMPORT int __cdecl PAL_swscanf(const WCHAR *, const WCHAR *, ...);
-PALIMPORT WCHAR * __cdecl PAL__wcslwr(WCHAR *);
+PALIMPORT WCHAR * __cdecl _wcslwr(WCHAR *);
 PALIMPORT LONG __cdecl PAL_wcstol(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONG __cdecl PAL_wcstoul(const WCHAR *, WCHAR **, int);
 PALIMPORT ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-PALIMPORT WCHAR * __cdecl PAL__i64tow(__int64, WCHAR *, int);
-PALIMPORT WCHAR * __cdecl PAL__ui64tow(unsigned __int64, WCHAR *, int);
-PALIMPORT int __cdecl PAL__wtoi(const WCHAR *);
+PALIMPORT WCHAR * __cdecl _i64tow(__int64, WCHAR *, int);
+PALIMPORT WCHAR * __cdecl _ui64tow(unsigned __int64, WCHAR *, int);
+PALIMPORT int __cdecl _wtoi(const WCHAR *);
 PALIMPORT size_t __cdecl PAL_wcsspn (const WCHAR *, const WCHAR *);
 PALIMPORT double __cdecl PAL_wcstod(const WCHAR *, WCHAR **);
 PALIMPORT int __cdecl PAL_iswalpha(WCHAR);
@@ -5469,7 +5469,7 @@ PALIMPORT int __cdecl PAL_iswdigit(WCHAR);
 PALIMPORT int __cdecl PAL_iswxdigit(WCHAR);
 PALIMPORT WCHAR __cdecl PAL_towlower(WCHAR);
 PALIMPORT WCHAR __cdecl PAL_towupper(WCHAR);
-#else // PAL_STDCPP_COMPAT
+#if 0 //else // PAL_STDCPP_COMPAT
 PALIMPORT size_t __cdecl wcslen(const WCHAR *);
 PALIMPORT int __cdecl wcscmp(const WCHAR*, const WCHAR*);
 PALIMPORT int __cdecl wcsncmp(const WCHAR *, const WCHAR *, size_t);
@@ -5619,9 +5619,8 @@ PALIMPORT void __cdecl _swab(char *, char *, int);
 
 #ifndef PAL_STDCPP_COMPAT
 PALIMPORT time_t __cdecl time(time_t *);
-#define PAL_tm tm
 
-struct PAL_tm {
+struct tm {
         int tm_sec;     /* seconds after the minute - [0,59] */
         int tm_min;     /* minutes after the hour - [0,59] */
         int tm_hour;    /* hours since midnight - [0,23] */
@@ -5633,22 +5632,28 @@ struct PAL_tm {
         int tm_isdst;   /* daylight savings time flag */
         };
 
-PALIMPORT struct PAL_tm * __cdecl localtime(const time_t *);
-PALIMPORT time_t __cdecl mktime(struct PAL_tm *);
+PALIMPORT struct tm * __cdecl localtime(const time_t *);
+PALIMPORT time_t __cdecl mktime(struct tm *);
 PALIMPORT char * __cdecl ctime(const time_t *);
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 
 PALIMPORT int __cdecl _open_osfhandle(INT_PTR, int);
 PALIMPORT int __cdecl _close(int);
 
 PALIMPORT int __cdecl _flushall();
 
-#ifndef PAL_STDCPP_COMPAT
-#define PAL_FILE FILE
-#endif // PAL_STDCPP_COMPAT
+#ifdef PAL_STDCPP_COMPAT
 
 struct _PAL_FILE;
 typedef struct _PAL_FILE PAL_FILE;
+
+#else // PAL_STDCPP_COMPAT
+
+struct _FILE;
+typedef struct _FILE FILE;
+typedef struct _FILE PAL_FILE;
+#endif // PAL_STDCPP_COMPAT
+
 
 #define SEEK_SET    0
 #define SEEK_CUR    1
@@ -5666,7 +5671,7 @@ typedef struct _PAL_FILE PAL_FILE;
 #define _IOLBF  1       /* setvbuf should set line buffered */
 #define _IONBF  2       /* setvbuf should set unbuffered */
 
-#ifdef PAL_STDCPP_COMPAT
+//#ifdef PAL_STDCPP_COMPAT
 PALIMPORT int __cdecl PAL_fclose(PAL_FILE *);
 PALIMPORT void __cdecl PAL_setbuf(PAL_FILE *, char*);
 PALIMPORT int __cdecl PAL_fflush(PAL_FILE *);
@@ -5678,8 +5683,8 @@ PALIMPORT int __cdecl PAL_fputc(int c, PAL_FILE *stream);
 PALIMPORT int __cdecl PAL_putchar(int c);
 PALIMPORT int __cdecl PAL_fprintf(PAL_FILE *, const char *, ...);
 PALIMPORT int __cdecl PAL_vfprintf(PAL_FILE *, const char *, va_list);
-PALIMPORT int __cdecl PAL__getw(PAL_FILE *);
-PALIMPORT int __cdecl PAL__putw(int, PAL_FILE *);
+PALIMPORT int __cdecl _getw(PAL_FILE *);
+PALIMPORT int __cdecl _putw(int, PAL_FILE *);
 PALIMPORT int __cdecl PAL_fseek(PAL_FILE *, LONG, int);
 PALIMPORT int __cdecl PAL_fgetpos(PAL_FILE *, fpos_t *);
 PALIMPORT int __cdecl PAL_fsetpos(PAL_FILE *, const fpos_t *);
@@ -5687,9 +5692,9 @@ PALIMPORT LONG __cdecl PAL_ftell(PAL_FILE *);
 PALIMPORT int __cdecl PAL_feof(PAL_FILE *);
 PALIMPORT int __cdecl PAL_ferror(PAL_FILE *);
 PALIMPORT PAL_FILE * __cdecl PAL_fopen(const char *, const char *);
-PALIMPORT PAL_FILE * __cdecl PAL__fdopen(int, const char *);
-PALIMPORT PAL_FILE * __cdecl PAL__wfopen(const WCHAR *, const WCHAR *);
-PALIMPORT PAL_FILE * __cdecl PAL__wfsopen(const WCHAR *, const WCHAR *, int);
+PALIMPORT PAL_FILE * __cdecl _fdopen(int, const char *);
+PALIMPORT PAL_FILE * __cdecl _wfopen(const WCHAR *, const WCHAR *);
+PALIMPORT PAL_FILE * __cdecl _wfsopen(const WCHAR *, const WCHAR *, int);
 PALIMPORT int __cdecl PAL_getc(PAL_FILE *stream);
 PALIMPORT int __cdecl PAL_fgetc(PAL_FILE *stream);
 PALIMPORT int __cdecl PAL_ungetc(int c, PAL_FILE *stream);
@@ -5698,7 +5703,7 @@ PALIMPORT WCHAR * __cdecl PAL_fgetws(WCHAR *, int, PAL_FILE *);
 PALIMPORT int __cdecl PAL_fwprintf(PAL_FILE *, const WCHAR *, ...);
 PALIMPORT int __cdecl PAL_vfwprintf(PAL_FILE *, const WCHAR *, va_list);
 PALIMPORT int __cdecl PAL_wprintf(const WCHAR*, ...);
-#else // PAL_STDCPP_COMPAT
+#if 0 //else // PAL_STDCPP_COMPAT
 PALIMPORT int __cdecl fclose(PAL_FILE *);
 PALIMPORT void __cdecl setbuf(PAL_FILE *, char*);
 PALIMPORT int __cdecl fflush(PAL_FILE *);
