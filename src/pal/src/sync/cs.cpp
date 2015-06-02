@@ -228,7 +228,7 @@ BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwS
 
     InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
 
-    LOGEXIT("InitializeCriticalSectionEx returns void\n");
+    LOGEXIT("InitializeCriticalSectionEx returns TRUE\n");
     PERF_EXIT(InitializeCriticalSection);
     return true;
 }

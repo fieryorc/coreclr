@@ -194,9 +194,9 @@ extern "C" {
 
 #ifdef BIT64
 #define __int64     long
-#else // _WIN64
+#else // BIT64
 #define __int64     long long
-#endif // _WIN64
+#endif // BIT64
 
 #define __int32     int
 #define __int16     short int
@@ -309,7 +309,7 @@ typedef signed __int64 LONG64;
 #define _W64
 #endif
 
-#if defined(_WIN64) || defined(__x86_64__)
+#ifdef BIT64
 
 // UNIXTODO: Implement proper _atoi64, the atol returns 32 bit result
 #define _atoi64 (__int64)atol
@@ -570,7 +570,7 @@ typedef long ptrdiff_t;
 typedef ULONG_PTR size_t;
 typedef LONG_PTR ptrdiff_t;
 #endif
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 #define _SIZE_T_DEFINED
 
 typedef LONG_PTR LPARAM;
@@ -681,7 +681,7 @@ typedef struct _GUID {
     UCHAR   Data4[ 8 ];
 } GUID;
 #define GUID_DEFINED
-#endif // GUID_DEFINED
+#endif // !GUID_DEFINED
 
 typedef struct _FILETIME {
     DWORD dwLowDateTime;

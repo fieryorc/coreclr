@@ -10,7 +10,7 @@
 #ifndef PAL_STDCPP_COMPAT
 #undef __in
 #undef __out
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 
 #undef _At_
 #undef _Deref_out_

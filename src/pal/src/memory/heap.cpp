@@ -118,15 +118,11 @@ HeapCreate(
 	       IN SIZE_T dwInitialSize,
 	       IN SIZE_T dwMaximumSize)
 {
-#ifndef __APPLE__
-    return (HANDLE)DUMMY_HEAP;
-#else
     HANDLE ret = INVALID_HANDLE_VALUE;
-
     PERF_ENTRY(HeapCreate);
     ENTRY("HeapCreate(flOptions=%#x, dwInitialSize=%u, dwMaximumSize=%u)\n",
         flOptions, dwInitialSize, dwMaximumSize);
-        
+#ifdef __APPLE__
     if ((flOptions & 0x40005) != 0)
     {
         ERROR("Invalid flOptions\n");
@@ -153,10 +149,13 @@ HeapCreate(
 #endif // CACHE_HEAP_ZONE
     }
     
+#else // __APPLE__
+    ret = (HANDLE)DUMMY_HEAP;
+#endif // __APPLE__
+
     LOGEXIT("HeapCreate returning HANDLE %p\n", ret);
     PERF_EXIT(HeapCreate);
     return ret;
-#endif // __APPLE__
 }
 
 
@@ -170,7 +169,15 @@ BOOL
 PALAPI
 HeapDestroy(HANDLE hHeap)
 {
-    return TRUE;
+    BOOL ret = TRUE;
+    PERF_ENTRY(HeapDestroy);
+    ENTRY("HeapDestroy(hHeap=%p)\n", hHeap);
+#ifdef __APPLE__
+    _ASSERT_MSG(FALSE, "HeapDestroy: NYI. Returning TRUE.");
+#endif // __APPLE__
+    LOGEXIT("HeapDestroy returning %d\n", ret);
+    PERF_EXIT(HeapDestroy);
+    return ret;
 }
 
 
@@ -218,9 +225,18 @@ HeapSize(
     DWORD dwFlags,
     LPCVOID lpMem)
 {
+    SIZE_T ret = (SIZE_T)-1;
+    PERF_ENTRY(HeapSize);
+    ENTRY("HeapSize(hHeap=%p, dwFlags=%#x, lpMem=%p)\n",
+            hHeap, dwFlags, lpMem);
+
     // First four bytes contain magic
     // Second four bytes size.
-    return ((DWORD *)(static_cast<LPCBYTE>(lpMem) - HEAP_SIZEINFO_SIZE))[1];
+    ret = ((DWORD *)(static_cast<LPCBYTE>(lpMem) - HEAP_SIZEINFO_SIZE))[1];
+
+    LOGEXIT("HeapSize returning %d\n", ret);
+    PERF_EXIT(HeapSize);
+    return ret;
 }
 
 /*++
@@ -300,9 +316,9 @@ HeapAlloc(
 
     /* use a magic number, to know it has been allocated with HeapAlloc
        when doing HeapFree */
-    *((DWORD *) pMem) = HEAP_MAGIC;
+    ((DWORD *) pMem)[0] = HEAP_MAGIC;
     /* Store the size in the second word */
-    *((DWORD *)pMem + 1) = dwBytes;
+    ((DWORD *)pMem)[1] = dwBytes;
 
     /*If the Heap Zero memory flag is set initialize to zero*/
     if (dwFlags == HEAP_ZERO_MEMORY)

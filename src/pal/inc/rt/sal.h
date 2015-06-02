@@ -2413,7 +2413,7 @@ extern "C" {
     #define __null                  _Null_impl_
     #define __notnull               _Notnull_impl_
     #define __maybenull             _Maybenull_impl_
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 
     /*
      __readonly l
@@ -2605,7 +2605,7 @@ extern "C" {
 #ifndef PAL_STDCPP_COMPAT
     #define __null
     #define __notnull
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
     #define __maybenull
     #define __readonly
     #define __notreadonly
@@ -2658,7 +2658,7 @@ buffer, use the table in the buffer annotations section.
 // These macros conflict with c++ headers.
 #define __in                                                     _SAL1_Source_(__in, (), _In_)
 #define __out                                                    _SAL1_Source_(__out, (), _Out_)
-#endif // ! PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 
 #define __ecount(size)                                           _SAL1_Source_(__ecount, (size), __notnull __elem_writableTo(size))
 #define __bcount(size)                                           _SAL1_Source_(__bcount, (size), __notnull __byte_writableTo(size))

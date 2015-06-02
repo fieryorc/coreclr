@@ -931,7 +931,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define sprintf_s _snprintf
 #define swprintf_s _snwprintf
 #define vsprintf_s _vsnprintf
-
 #define vswprintf_s _vsnwprintf
 
 extern "C++" {
@@ -1353,7 +1352,7 @@ typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)
 
-#if defined(_WIN64) || defined(__x86_64__)
+#ifdef BIT64
 #define VALPTR(x) VAL64(x)
 #define GET_UNALIGNED_PTR(x) GET_UNALIGNED_64(x)
 #define GET_UNALIGNED_VALPTR(x) GET_UNALIGNED_VAL64(x)
@@ -1764,7 +1763,7 @@ typedef struct tagVS_FIXEDFILEINFO
 #ifndef PAL_STDCPP_COMPAT
 #include "cpp/ccombstr.h"
 #include "cpp/cstring.h"
-#endif // PAL_STDCPP_COMPAT
+#endif // !PAL_STDCPP_COMPAT
 #include "sscli_version.h"
 
 #endif // RC_INVOKED
