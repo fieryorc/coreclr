@@ -5449,7 +5449,7 @@ PALIMPORT WCHAR _WConst_return * __cdecl PAL_wcsstr(const WCHAR *, const WCHAR *
 PALIMPORT WCHAR * __cdecl PAL_wcstok(WCHAR *, const WCHAR *);
 PALIMPORT size_t __cdecl PAL_wcscspn(const WCHAR *, const WCHAR *);
 PALIMPORT int __cdecl PAL_swprintf(WCHAR *, const WCHAR *, ...);
-PALIMPORT int __cdecl vswprintf(WCHAR *, const WCHAR *, va_list);
+PALIMPORT int __cdecl PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
 PALIMPORT int __cdecl _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
 PALIMPORT int __cdecl PAL_swscanf(const WCHAR *, const WCHAR *, ...);
 PALIMPORT WCHAR * __cdecl _wcslwr(WCHAR *);

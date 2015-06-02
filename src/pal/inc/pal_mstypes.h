@@ -192,7 +192,6 @@ extern "C" {
 // they must be either signed or unsigned) and we want to be able to use 
 // __int64 as though it were intrinsic
 
-#ifndef PAL_STDCPP_COMPAT
 #ifdef BIT64
 #define __int64     long
 #else // _WIN64
@@ -205,6 +204,7 @@ extern "C" {
 
 #endif // _MSC_VER
 
+#ifndef PAL_STDCPP_COMPAT
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
 // includes are not included, so we need to define them.
 #ifndef PAL_IMPLEMENTATION
