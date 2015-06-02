@@ -311,7 +311,7 @@ typedef signed __int64 LONG64;
 #define _W64
 #endif
 
-#if _WIN64
+#if defined(_WIN64) || defined(__x86_64__)
 
 // UNIXTODO: Implement proper _atoi64, the atol returns 32 bit result
 #define _atoi64 (__int64)atol

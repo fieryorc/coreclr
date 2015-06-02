@@ -364,13 +364,13 @@ PAL_IsDebuggerPresent();
 
 #ifndef PAL_STDCPP_COMPAT
 typedef ULONG64   fpos_t;
-#endif // PAL_STDCPP_COMPAT
 
 #if _WIN64 || _MSC_VER >= 1400
 typedef __int64 time_t;
 #else
 typedef long time_t;
 #endif
+#endif // PAL_STDCPP_COMPAT
 #define _TIME_T_DEFINED
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
@@ -3455,7 +3455,6 @@ GetProcessHeap(
 
 #define HEAP_ZERO_MEMORY 0x00000008
 
-#ifdef __APPLE__
 PALIMPORT
 HANDLE
 PALAPI
@@ -3463,7 +3462,19 @@ HeapCreate(
 	       IN DWORD flOptions,
 	       IN SIZE_T dwInitialSize,
 	       IN SIZE_T dwMaximumSize);
-#endif // __APPLE__
+
+PALIMPORT
+BOOL
+PALAPI
+HeapDestroy(HANDLE hHeap);
+
+PALIMPORT
+SIZE_T
+PALAPI
+HeapSize(
+    HANDLE hHeap,
+    DWORD dwFlags,
+    LPCVOID lpMem);
 
 PALIMPORT
 LPVOID
@@ -5554,7 +5565,7 @@ PALIMPORT double __cdecl _copysign(double, double);
 #ifdef __cplusplus
 extern "C++" {
 
-#ifdef BIT64
+#if defined(BIT64) && !defined(PAL_STDCPP_COMPAT)
 inline __int64 abs(__int64 _X) {
     return llabs(_X);
 }
@@ -5606,8 +5617,8 @@ PALIMPORT char * __cdecl _fullpath(char *, const char *, size_t);
 
 PALIMPORT void __cdecl _swab(char *, char *, int);
 
-PALIMPORT time_t __cdecl time(time_t *);
 #ifndef PAL_STDCPP_COMPAT
+PALIMPORT time_t __cdecl time(time_t *);
 #define PAL_tm tm
 
 struct PAL_tm {

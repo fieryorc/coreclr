@@ -280,7 +280,7 @@ inline void *__cdecl operator new(size_t, void *_P)
 #define THIS_
 #define THIS                void
 
-#if _MSC_VER
+#if  defined(_MSC_VER) || defined(PAL_STDCPP_COMPAT)
 #define DECLSPEC_NOVTABLE   __declspec(novtable)
 #define DECLSPEC_IMPORT     __declspec(dllimport)
 #define DECLSPEC_SELECTANY  __declspec(selectany)
@@ -1000,16 +1000,19 @@ inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 
 inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
 {
-    int guess = 10;
+    int guess = 256;
 
     for (;;)
     {
         WCHAR *buf = (WCHAR *)malloc(guess * sizeof(WCHAR));
-        if(buf == nullptr)
+        if (buf == nullptr)
             return 0;
 
-        int ret = _vsnwprintf(buf, guess, _Format, _ArgList);
+        va_list apcopy;
+        va_copy(apcopy, _ArgList);
+        int ret = _vsnwprintf(buf, guess, _Format, apcopy);
         free(buf);
+        va_end(apcopy);
 
         if ((ret != -1) && (ret < guess))
             return ret;
@@ -1350,7 +1353,7 @@ typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)
 
-#ifdef _WIN64
+#if defined(_WIN64) || defined(__x86_64__)
 #define VALPTR(x) VAL64(x)
 #define GET_UNALIGNED_PTR(x) GET_UNALIGNED_64(x)
 #define GET_UNALIGNED_VALPTR(x) GET_UNALIGNED_VAL64(x)
